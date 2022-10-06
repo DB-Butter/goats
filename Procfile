@@ -1,0 +1,1 @@
+web: gunicorn goats_project.wsgi
