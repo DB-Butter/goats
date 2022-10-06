@@ -1,0 +1,34 @@
+{% extends 'base.html' %} 
+{% block content %}
+<div class="home__playlists">
+    {% for customgoat in customgoats %}
+
+        <div class="playlist mb-5">
+            <h3 class="title is-3 has-text-success">{{customgoat.title}}</h3>
+            <hr />
+
+            {% for expertise in customgoat.expertises.all %}
+
+                <div class="song">
+                    <span>{{forloop.counter}}</span>
+                    <span><b>{{expertise.title}}</b></span>
+                    <span>{{expertise.strength}}</span>
+                    <span>
+                        <!--   Here we are creating an anchor
+                        tag that when clicked will hit our new
+                        route and send a query to remove the song     -->
+                        <a href="{% url 'customgoat_expertise_assoc' customgoat.pk expertise.pk %}?assoc=remove" class="button is-danger is-outlined">
+                        <span class="icon is-small">
+                            <i class="fas fa-times"></i>
+                        </span>
+                        </a>
+                    </span>
+                </div>
+
+            {% endfor %}
+        </div>
+    {% empty %} 
+        <div class="playlist mb-5">"There are no custom goats"</div>
+    {% endfor %}
+</div>
+{% endblock %}

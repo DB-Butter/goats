@@ -1,0 +1,105 @@
+{% extends 'base.html' %} 
+{% block content %}
+<div class="detail__img">
+    <img src="{{goat.img}}" alt="{{goat.name}}" />
+</div>
+<div class="detail__name">
+    <h1 class="title">{{goat.name}}</h1>
+</div>
+<div class="detail__container">
+    <div class="buttons">
+        <a href="{% url 'goat_update' goat.pk %}" class="button is-info">
+            <span class="icon">
+                <i class="fas fa-edit"></i>
+            </span>
+        </a>
+        <a href="/allgoats/{{goat.id}}/delete" class="button is-danger">
+            <span class="icon">
+                <i class="fas fa-trash-alt"></i>
+            </span>
+        </a>
+    </div>
+    <form class="mb-5" action="{% url 'expertise_create' goat.pk %}" method="post">
+        {% csrf_token %}
+        <div class="field has-addons">
+            <div class="control">
+                <input
+                    class="input"
+                    type="text"
+                    name="title"
+                    placeholder="Title"
+                    required
+                />
+            </div>
+            <div class="control">
+                <input
+                    class="input"
+                    type="number"
+                    name="strength"
+                    placeholder="Strength out of 10^X"
+                    min="1"
+                    required
+                />
+            </div>
+            <div class="control">
+                <input class="button is-primary" type="submit" value="Add Expertise" />
+            </div>
+        </div>
+    </form>
+    <div class="detail__songs mb-5">
+
+        <h3 class="title is-3">Expertises</h3>
+
+        {% for expertise in goat.expertises.all %}
+        <div class="song">
+        <span>{{forloop.counter}}</span>
+        <span><b>{{expertise.title}}</b></span>
+        <span>{{expertise.strength}}</span>
+        <span>
+            <div class="dropdown">
+              <div class="dropdown-trigger">
+                <button
+                  class="button"
+                  aria-haspopup="true"
+                  aria-controls="dropdown-menu"
+                >
+                  <span>Add to Custom Goat</span>
+                  <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  {% for customgoat in customgoats %}
+              <!-- each custom goat becomes a drop
+              down item with the ids needed to add to the join table  -->
+                  <a
+                    href="{% url 'customgoat_expertise_assoc' customgoat.pk expertise.pk %}?assoc=add"
+                    class="dropdown-item"
+                  >
+                    {{customgoat.title}}
+                  </a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </span>
+        </div>
+
+        {% empty %}
+            <article class="message">
+                <div class="message-header">
+                    <p>No Expertises Available</p>
+                </div>
+            </article>
+
+        {% endfor %}
+    </div>
+    <div class="detail__about">
+        <h4 class="title is-4">About</h4>
+        <p>{{goat.bio}}</p>
+    </div>
+</div>
+
+{% endblock %}
